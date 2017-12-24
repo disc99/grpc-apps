@@ -1,0 +1,78 @@
+buildscript {
+	apply from: 'dependencies.gradle'
+
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+		classpath "com.google.protobuf:protobuf-gradle-plugin:${protobufPluginVersion}"
+	}
+}
+
+subprojects {
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
+
+	apply plugin: 'java'
+	apply plugin: 'idea'
+	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'com.google.protobuf'
+
+	sourceCompatibility = compatibility
+	targetCompatibility = compatibility
+
+	version = '0.0.1-SNAPSHOT'
+
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		}
+	}
+
+	protobuf {
+		protoc {
+			artifact = "com.google.protobuf:protoc:${protocVersion}"
+		}
+		plugins {
+			grpc {
+				artifact = "io.grpc:protoc-gen-grpc-java:${protocGenVersion}"
+			}
+		}
+		generateProtoTasks {
+			all()*.plugins {
+				grpc {}
+			}
+		}
+	}
+
+	sourceSets {
+		main {
+			java {
+				srcDirs 'build/generated/source/proto/main/grpc'
+				srcDirs 'build/generated/source/proto/main/java'
+			}
+		}
+	}
+}
+
+project(':front-service') {
+	apply plugin: 'org.springframework.boot'
+
+	dependencies {
+		compile dependency.api
+		compile dependency.grpc
+	}
+}
+
+project(':backend-service') {
+	apply plugin: 'org.springframework.boot'
+
+	dependencies {
+		compile dependency.grpc
+	}
+
+}

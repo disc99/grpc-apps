@@ -1,0 +1,36 @@
+ext {
+    encoding = 'UTF-8'
+    compatibility = 1.8
+    springBootVersion = '1.5.9.RELEASE'
+    springCloudVersion = 'Edgware.RELEASE'
+    spockVersion = '1.1-groovy-2.4'
+    dependencyManagementVersion = '1.0.3.RELEASE'
+    protobufPluginVersion = '0.8.3'
+    protocVersion = '3.2.0'
+    protocGenVersion = '1.4.0'
+
+    dependency = [
+            api: [
+                    "org.springframework.boot:spring-boot-starter-web",
+//                    "org.springframework.boot:spring-boot-starter-actuator",
+//                    "io.springfox:springfox-swagger2:${swaggerVersion}",
+//                    "io.springfox:springfox-swagger-ui:${swaggerVersion}",
+//                    "io.springfox:springfox-bean-validators:${swaggerVersion}"
+            ],
+            grpc: [
+                    'org.lognet:grpc-spring-boot-starter:2.1.4'
+            ],
+            devtools: [
+                    'org.springframework.boot:spring-boot-devtools'
+            ],
+            compileSupport: [
+                    'org.projectlombok:lombok',
+                    'org.springframework.boot:spring-boot-configuration-processor'
+            ],
+            test: [
+                    "org.springframework.boot:spring-boot-starter-test",
+                    "org.spockframework:spock-core:${spockVersion}",
+                    "org.spockframework:spock-spring:${spockVersion}"
+            ]
+    ]
+}
