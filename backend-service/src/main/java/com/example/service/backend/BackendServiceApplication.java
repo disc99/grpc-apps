@@ -7,16 +7,25 @@ import io.grpc.examples.helloworld.HelloReply;
 import io.grpc.examples.helloworld.HelloRequest;
 import io.grpc.protobuf.ProtoUtils;
 import io.grpc.stub.StreamObserver;
+import io.grpc.util.TransmitStatusRuntimeExceptionInterceptor;
+import org.lognet.springboot.grpc.GRpcGlobalInterceptor;
 import org.lognet.springboot.grpc.GRpcService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class BackendServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackendServiceApplication.class, args);
+	}
+
+	@Bean
+	@GRpcGlobalInterceptor
+	ServerInterceptor transmitStatusRuntimeExceptionInterceptor() {
+		return TransmitStatusRuntimeExceptionInterceptor.instance();
 	}
 
 	@GRpcService
@@ -33,25 +42,25 @@ public class BackendServiceApplication {
 
 		@Override
 		public void sayHelloUnary(HelloRequest request, StreamObserver<HelloReply> responseObserver) {
-//			Metadata metadata = new Metadata();
-//			Metadata.Key<DebugInfo> key = ProtoUtils.keyForProto(DebugInfo.getDefaultInstance());
-//			DebugInfo values = DebugInfo.newBuilder()
-//					.addStackEntries("stack_entry_1")
-//					.addStackEntries("stack_entry_2")
-//					.addStackEntries("stack_entry_3")
-//					.setDetail("detailed error info.").build();
-//			metadata.put(key, values);
-//			StatusRuntimeException error = Status.INVALID_ARGUMENT
-//					.withDescription("ERROR DESC")
-//					.asRuntimeException(metadata);
-//			throw error;
-//            responseObserver.onError(error);
-
-            HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName()
-//                    + " server.port="+port
-                    + " grpc.port=" + gport).build();
+            HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName() + " grpc.port=" + gport).build();
             responseObserver.onNext(reply);
             responseObserver.onCompleted();
+		}
+
+		@Override
+		public void sayError(HelloRequest request, StreamObserver<HelloReply> responseObserver) {
+			Metadata metadata = new Metadata();
+			Metadata.Key<DebugInfo> key = ProtoUtils.keyForProto(DebugInfo.getDefaultInstance());
+			DebugInfo values = DebugInfo.newBuilder()
+					.addStackEntries("stack_entry_1")
+					.addStackEntries("stack_entry_2")
+					.addStackEntries("stack_entry_3")
+					.setDetail("detailed error info.").build();
+			metadata.put(key, values);
+
+			throw Status.INVALID_ARGUMENT
+					.withDescription("ERROR DESC")
+					.asRuntimeException(metadata);
 		}
 
 		@Override

@@ -11,6 +11,7 @@ service Greeter {
   rpc SayHelloServerStreaming (HelloRequest) returns (stream HelloReply) {}
   rpc SayHelloClientStreaming (stream HelloRequest) returns (HelloReply) {}
   rpc SayHelloBidirectionalStreaming (stream HelloRequest) returns (stream HelloReply) {}
+  rpc SayError (HelloRequest) returns (HelloReply) {}
 }
 
 message HelloRequest {
