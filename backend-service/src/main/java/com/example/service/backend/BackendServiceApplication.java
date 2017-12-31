@@ -2,6 +2,7 @@ package com.example.service.backend;
 
 import com.google.rpc.DebugInfo;
 import io.grpc.*;
+import io.grpc.examples.helloworld.Error;
 import io.grpc.examples.helloworld.GreeterGrpc;
 import io.grpc.examples.helloworld.HelloReply;
 import io.grpc.examples.helloworld.HelloRequest;
@@ -29,16 +30,16 @@ public class BackendServiceApplication {
 	}
 
 	@GRpcService
-	public static class GreeterService extends  GreeterGrpc.GreeterImplBase {
+	public static class GreeterService extends GreeterGrpc.GreeterImplBase {
 		@Value("${grpc.port}")
 		int gport;
 
-		@Override
-		public void sayHello(HelloRequest request, StreamObserver<HelloReply> responseObserver) {
-			HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName()).build();
-			responseObserver.onNext(reply);
-			responseObserver.onCompleted();
-		}
+        @Override
+        public void sayHello(HelloRequest request, StreamObserver<HelloReply> responseObserver) {
+            HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName() + " grpc.port=" + gport).build();
+            responseObserver.onNext(reply);
+            responseObserver.onCompleted();
+        }
 
 		@Override
 		public void sayHelloUnary(HelloRequest request, StreamObserver<HelloReply> responseObserver) {
@@ -49,17 +50,16 @@ public class BackendServiceApplication {
 
 		@Override
 		public void sayError(HelloRequest request, StreamObserver<HelloReply> responseObserver) {
+			Error error = Error.newBuilder()
+					.setMessage("my error")
+					.setDetail("error detail")
+					.build();
 			Metadata metadata = new Metadata();
-			Metadata.Key<DebugInfo> key = ProtoUtils.keyForProto(DebugInfo.getDefaultInstance());
-			DebugInfo values = DebugInfo.newBuilder()
-					.addStackEntries("stack_entry_1")
-					.addStackEntries("stack_entry_2")
-					.addStackEntries("stack_entry_3")
-					.setDetail("detailed error info.").build();
-			metadata.put(key, values);
+			Metadata.Key<Error> key = ProtoUtils.keyForProto(error);
+			metadata.put(key, error);
 
-			throw Status.INVALID_ARGUMENT
-					.withDescription("ERROR DESC")
+			throw Status.INTERNAL
+					.withDescription("server error")
 					.asRuntimeException(metadata);
 		}
 
@@ -79,8 +79,6 @@ public class BackendServiceApplication {
 				public void onNext(HelloRequest request) {
 					HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName()).build();
 					responseObserver.onNext(reply);
-					responseObserver.onNext(reply);
-					responseObserver.onNext(reply);
 					responseObserver.onCompleted();
 				}
 				@Override
@@ -99,10 +97,7 @@ public class BackendServiceApplication {
 			return new StreamObserver<HelloRequest>() {
 				@Override
 				public void onNext(HelloRequest request) {
-					System.out.println("Call onNext");
 					HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName()).build();
-					responseObserver.onNext(reply);
-					responseObserver.onNext(reply);
 					responseObserver.onNext(reply);
 					responseObserver.onCompleted();
 				}
