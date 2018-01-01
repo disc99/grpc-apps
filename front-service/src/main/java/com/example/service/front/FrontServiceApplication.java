@@ -6,10 +6,17 @@ import io.grpc.examples.helloworld.GreeterGrpc;
 import io.grpc.examples.helloworld.HelloReply;
 import io.grpc.examples.helloworld.HelloRequest;
 import io.grpc.protobuf.ProtoUtils;
+import io.grpc.stub.StreamObserver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @SpringBootApplication
 @RestController
@@ -22,14 +29,14 @@ public class FrontServiceApplication {
     @GetMapping("/hello")
     String hello() {
         HelloRequest request = HelloRequest.newBuilder().setName("Tom").build();
-        return stub().sayHelloUnary(request).toString();
+        return blockingStub().sayHelloUnary(request).toString();
     }
 
     @GetMapping("/err")
         String err() {
             HelloRequest request = HelloRequest.newBuilder().setName("Tom").build();
             try {
-                return stub().sayHello(request).toString();
+                return blockingStub().sayHello(request).toString();
             } catch (StatusRuntimeException e) {
                 Status status = Status.fromThrowable(e);
                 Metadata metadata = Status.trailersFromThrowable(e);
@@ -47,10 +54,90 @@ public class FrontServiceApplication {
         return reply.toString();
     }
 
-    private GreeterGrpc.GreeterBlockingStub stub() {
+
+    @GetMapping("/unary")
+    String unary() {
+        HelloRequest request = HelloRequest.newBuilder().setName("Tom").build();
+        return blockingStub().sayHelloUnary(request).toString();
+    }
+
+    @GetMapping("/serverStreaming")
+    String serverStreaming() {
+        HelloRequest request = HelloRequest.newBuilder().setName("Tom").build();
+        Iterator<HelloReply> replies = blockingStub().sayHelloServerStreaming(request);
+        List<HelloReply> response = new ArrayList<>();
+        while (replies.hasNext()) {
+            response.add(replies.next());
+        }
+        return response.toString();
+    }
+
+    @GetMapping("/clientStreaming")
+    String clientStreaming() throws Exception {
+        HelloRequest request = HelloRequest.newBuilder().setName("Tom").build();
+        CountDownLatch finishLatch = new CountDownLatch(1);
+        List<HelloReply> response = new ArrayList<>();
+        StreamObserver<HelloRequest> streamObserver = stub().sayHelloClientStreaming(new StreamObserver<HelloReply>() {
+            @Override
+            public void onNext(HelloReply reply) {
+                response.add(reply);
+            }
+            @Override
+            public void onError(Throwable t) {
+                // ...
+            }
+            @Override
+            public void onCompleted() {
+                finishLatch.countDown();
+            }
+        });
+        streamObserver.onNext(request);
+        streamObserver.onNext(request);
+        streamObserver.onNext(request);
+        streamObserver.onCompleted();
+        finishLatch.await(10, TimeUnit.SECONDS);
+        return response.toString();
+    }
+
+    @GetMapping("/bidirectionalStreaming")
+    String bidirectionalStreaming() throws Exception {
+        HelloRequest request = HelloRequest.newBuilder().setName("Tom").build();
+        CountDownLatch finishLatch = new CountDownLatch(1);
+        List<HelloReply> response = new ArrayList<>();
+        StreamObserver<HelloRequest> streamObserver = stub().sayHelloBidirectionalStreaming(new StreamObserver<HelloReply>() {
+            @Override
+            public void onNext(HelloReply reply) {
+                response.add(reply);
+            }
+            @Override
+            public void onError(Throwable t) {
+                // ...
+            }
+            @Override
+            public void onCompleted() {
+                finishLatch.countDown();
+            }
+        });
+        streamObserver.onNext(request);
+        streamObserver.onNext(request);
+        streamObserver.onNext(request);
+        streamObserver.onCompleted();
+        finishLatch.await(10, TimeUnit.SECONDS);
+        return response.toString();
+    }
+
+
+    private GreeterGrpc.GreeterBlockingStub blockingStub() {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 6565)
                 .usePlaintext(true)
                 .build();
         return GreeterGrpc.newBlockingStub(channel);
+    }
+
+    private GreeterGrpc.GreeterStub stub() {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 6565)
+                .usePlaintext(true)
+                .build();
+        return GreeterGrpc.newStub(channel);
     }
 }

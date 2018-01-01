@@ -1,6 +1,5 @@
 package com.example.service.backend;
 
-import com.google.rpc.DebugInfo;
 import io.grpc.*;
 import io.grpc.examples.helloworld.Error;
 import io.grpc.examples.helloworld.GreeterGrpc;
@@ -15,6 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 public class BackendServiceApplication {
@@ -74,12 +76,11 @@ public class BackendServiceApplication {
 
 		@Override
 		public StreamObserver<HelloRequest> sayHelloClientStreaming(StreamObserver<HelloReply> responseObserver) {
+			List<String> requests = new ArrayList<>();
 			return new StreamObserver<HelloRequest>() {
 				@Override
 				public void onNext(HelloRequest request) {
-					HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName()).build();
-					responseObserver.onNext(reply);
-					responseObserver.onCompleted();
+					requests.add(request.getName());
 				}
 				@Override
 				public void onError(Throwable t) {
@@ -87,7 +88,9 @@ public class BackendServiceApplication {
 				}
 				@Override
 				public void onCompleted() {
-					// ...
+					HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + requests.toString()).build();
+					responseObserver.onNext(reply);
+					responseObserver.onCompleted();
 				}
 			};
 		}
@@ -99,7 +102,8 @@ public class BackendServiceApplication {
 				public void onNext(HelloRequest request) {
 					HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName()).build();
 					responseObserver.onNext(reply);
-					responseObserver.onCompleted();
+					responseObserver.onNext(reply);
+					responseObserver.onNext(reply);
 				}
 				@Override
 				public void onError(Throwable t) {
@@ -107,7 +111,7 @@ public class BackendServiceApplication {
 				}
 				@Override
 				public void onCompleted() {
-					// ...
+					responseObserver.onCompleted();
 				}
 			};
 		}
