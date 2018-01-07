@@ -13,12 +13,14 @@ import org.lognet.springboot.grpc.GRpcService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
+@EnableEurekaClient
 public class BackendServiceApplication {
 
 	public static void main(String[] args) {
@@ -38,7 +40,8 @@ public class BackendServiceApplication {
 
         @Override
         public void sayHello(HelloRequest request, StreamObserver<HelloReply> responseObserver) {
-            HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName() + " grpc.port=" + gport).build();
+//            HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName() + " grpc.port=" + gport).build();
+            HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + request.getName()).build();
             responseObserver.onNext(reply);
             responseObserver.onCompleted();
         }

@@ -18,7 +18,11 @@ ext {
 //                    "io.springfox:springfox-bean-validators:${swaggerVersion}"
             ],
             grpc: [
-                    'org.lognet:grpc-spring-boot-starter:2.1.4'
+                    'org.lognet:grpc-spring-boot-starter:2.1.4',
+                    'org.springframework.cloud:spring-cloud-starter-eureka'
+            ],
+            grpcTest: [
+                    "io.grpc:grpc-testing:1.8.0"
             ],
             devtools: [
                     'org.springframework.boot:spring-boot-devtools'

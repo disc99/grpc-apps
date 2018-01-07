@@ -65,6 +65,7 @@ project(':front-service') {
 	dependencies {
 		compile dependency.api
 		compile dependency.grpc
+		testCompile dependency.grpcTest
 	}
 }
 
@@ -73,6 +74,6 @@ project(':backend-service') {
 
 	dependencies {
 		compile dependency.grpc
+		testCompile dependency.grpcTest
 	}
-
 }
