@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List</title>
+</head>
+<body>
+    <a href="/room/add">add</a>
+    <ul>
+        <li th:each="room : ${summaries}">
+            <a th:href="@{'/room/' + ${room.getId()}}" th:text="${room.getName()}"></a>
+        </li>
+    </ul>
+</body>
+</html>

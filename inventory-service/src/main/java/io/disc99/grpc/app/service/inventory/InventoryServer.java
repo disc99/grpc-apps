@@ -15,8 +15,8 @@ import static java.util.stream.Collectors.toList;
 public class InventoryServer {
 
     public static void main(String[] args) throws Exception {
-        STORE.put(1, "Hotel 1");
-        STORE.put(2, "Hotel 2");
+        STORE.put(1, "Room 1");
+        STORE.put(2, "Room 2");
 
         Server server = ServerBuilder.forPort(6565)
                 .addService(new InventoryImpl())

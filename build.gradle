@@ -76,6 +76,19 @@ project(':hotel-ui') {
 	dependencies {
 		compile project(':app-scheme')
 		compile dependency.ui
+		compileOnly dependency.compileSupport
+		runtime dependency.devtools
+	}
+}
+
+project(':management-ui') {
+	apply plugin: 'java'
+	apply plugin: 'org.springframework.boot'
+
+	dependencies {
+		compile project(':app-scheme')
+		compile dependency.ui
+		compileOnly dependency.compileSupport
 		runtime dependency.devtools
 	}
 }

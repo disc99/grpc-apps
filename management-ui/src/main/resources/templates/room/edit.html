@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Add room</title>
+</head>
+<body>
+<form th:action="@{/room/} + ${detail.getId()}" th:object="${form}" method="post">
+    <input type="text" th:field="*{name}"/>
+    <input type="submit"/>
+</form>
+</body>
+</html>
