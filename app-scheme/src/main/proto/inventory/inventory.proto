@@ -18,12 +18,14 @@ message RoomId {
 }
 
 message Room {
-    string name = 1;
+    int32 hotelId = 1;
+    string name = 2;
 }
 
 message RoomDetail {
-    int32 id = 1;
-    string name = 2;
+    int32 hotelId = 1;
+    int32 id = 2;
+    string name = 3;
 }
 
 message RoomSummaries {
@@ -31,6 +33,7 @@ message RoomSummaries {
 }
 
 message RoomSummary {
-    int32 id = 1;
-    string name = 2;
+    int32 hotelId = 1;
+    int32 id = 2;
+    string name = 3;
 }
