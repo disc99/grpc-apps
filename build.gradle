@@ -19,7 +19,6 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'idea'
 	apply plugin: 'io.spring.dependency-management'
-	apply plugin: 'com.google.protobuf'
 
 	sourceCompatibility = compatibility
 	targetCompatibility = compatibility
@@ -30,22 +29,6 @@ subprojects {
 		imports {
 			mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
 			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-		}
-	}
-
-	protobuf {
-		protoc {
-			artifact = "com.google.protobuf:protoc:${protocVersion}"
-		}
-		plugins {
-			grpc {
-				artifact = "io.grpc:protoc-gen-grpc-java:${protocGenVersion}"
-			}
-		}
-		generateProtoTasks {
-			all()*.plugins {
-				grpc {}
-			}
 		}
 	}
 
@@ -71,7 +54,24 @@ project(':inventory-service') {
 }
 
 project(':sample-front-service') {
+	apply plugin: 'com.google.protobuf'
 	apply plugin: 'org.springframework.boot'
+
+	protobuf {
+		protoc {
+			artifact = "com.google.protobuf:protoc:${protocVersion}"
+		}
+		plugins {
+			grpc {
+				artifact = "io.grpc:protoc-gen-grpc-java:${protocGenVersion}"
+			}
+		}
+		generateProtoTasks {
+			all()*.plugins {
+				grpc {}
+			}
+		}
+	}
 
 	dependencies {
 		compile dependency.api
@@ -81,7 +81,24 @@ project(':sample-front-service') {
 }
 
 project(':sample-backend-service') {
+	apply plugin: 'com.google.protobuf'
 	apply plugin: 'org.springframework.boot'
+
+	protobuf {
+		protoc {
+			artifact = "com.google.protobuf:protoc:${protocVersion}"
+		}
+		plugins {
+			grpc {
+				artifact = "io.grpc:protoc-gen-grpc-java:${protocGenVersion}"
+			}
+		}
+		generateProtoTasks {
+			all()*.plugins {
+				grpc {}
+			}
+		}
+	}
 
 	dependencies {
 		compile dependency.grpc
