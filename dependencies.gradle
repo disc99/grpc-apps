@@ -8,6 +8,7 @@ ext {
     protobufPluginVersion = '0.8.3'
     protocVersion = '3.2.0'
     protocGenVersion = '1.4.0'
+    grpcVersion = '1.8.0'
 
     dependency = [
             api: [
@@ -18,11 +19,14 @@ ext {
 //                    "io.springfox:springfox-bean-validators:${swaggerVersion}"
             ],
             grpc: [
-                    'org.lognet:grpc-spring-boot-starter:2.1.4',
-                    'org.springframework.cloud:spring-cloud-starter-eureka'
+                    "io.grpc:grpc-protobuf:${grpcVersion}",
+                    "io.grpc:grpc-stub:${grpcVersion}",
+                    "io.grpc:grpc-netty:${grpcVersion}"
+//                    'org.lognet:grpc-spring-boot-starter:2.1.4',
+//                    'org.springframework.cloud:spring-cloud-starter-eureka'
             ],
             grpcTest: [
-                    "io.grpc:grpc-testing:1.8.0"
+                    "io.grpc:grpc-testing:${grpcVersion}"
             ],
             devtools: [
                     'org.springframework.boot:spring-boot-devtools'

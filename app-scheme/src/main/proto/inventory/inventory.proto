@@ -6,8 +6,12 @@ option java_package = "io.disc99.grpc.apps.inventory";
 package greeter;
 
 service Inventory {
-    rpc Add (Room) returns (int32) {}
-    rpc FindBy (int32) returns (RoomDetail) {}
+    rpc Add (Room) returns (RoomId) {}
+    rpc FindBy (RoomId) returns (RoomDetail) {}
+}
+
+message RoomId {
+    int32 id = 1;
 }
 
 message Room {
