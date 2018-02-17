@@ -59,6 +59,10 @@ subprojects {
 	}
 }
 
+project(':app-scheme') {
+
+}
+
 project(':front-service') {
 	apply plugin: 'org.springframework.boot'
 
