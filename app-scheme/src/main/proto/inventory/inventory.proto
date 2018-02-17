@@ -5,9 +5,9 @@ import "google/protobuf/empty.proto";
 option java_multiple_files = true;
 option java_package = "io.disc99.grpc.apps.inventory";
 
-package greeter;
+package inventory;
 
-service Inventory {
+service InventoryService {
     rpc Add (Room) returns (RoomId) {}
     rpc FindBy (RoomId) returns (RoomDetail) {}
     rpc Search (google.protobuf.Empty) returns (RoomSummaries) {}

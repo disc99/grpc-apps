@@ -1,7 +1,7 @@
-package io.disc99.grpc.app.service.inventory;
+package io.disc99.grpc.app.service.hotel;
 
 import com.google.protobuf.Empty;
-import io.disc99.grpc.apps.inventory.*;
+import io.disc99.grpc.apps.hotel.*;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -12,14 +12,14 @@ import java.util.Map;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
-public class InventoryServer {
+public class HotelServer {
 
     public static void main(String[] args) throws Exception {
-        STORE.put(1, "Room 1");
-        STORE.put(2, "Room 2");
+        STORE.put(1, "Hotel 1");
+        STORE.put(2, "Hotel 2");
 
-        Server server = ServerBuilder.forPort(6565)
-                .addService(new InventoryServiceImpl())
+        Server server = ServerBuilder.forPort(6566)
+                .addService(new HotelServiceImpl())
                 .build();
 
         server.start();
@@ -29,13 +29,13 @@ public class InventoryServer {
 
     static Map<Integer, String> STORE = new HashMap<>();
 
-    static class InventoryServiceImpl extends InventoryServiceGrpc.InventoryServiceImplBase {
+    static class HotelServiceImpl extends HotelServiceGrpc.HotelServiceImplBase {
         @Override
-        public void add(Room request, StreamObserver<RoomId> responseObserver) {
+        public void add(Hotel request, StreamObserver<HotelId> responseObserver) {
             int id = STORE.size() + 1;
             STORE.put(id, request.getName());
 
-            RoomId roomId = RoomId.newBuilder()
+            HotelId roomId = HotelId.newBuilder()
                     .setId(id)
                     .build();
 
@@ -44,10 +44,10 @@ public class InventoryServer {
         }
 
         @Override
-        public void findBy(RoomId request, StreamObserver<RoomDetail> responseObserver) {
+        public void findBy(HotelId request, StreamObserver<HotelDetail> responseObserver) {
             int id = request.getId();
 
-            RoomDetail room = RoomDetail.newBuilder()
+            HotelDetail room = HotelDetail.newBuilder()
                     .setId(id)
                     .setName(STORE.get(id))
                     .build();
@@ -57,13 +57,13 @@ public class InventoryServer {
         }
 
         @Override
-        public void search(Empty request, StreamObserver<RoomSummaries> responseObserver) {
-            RoomSummaries summaries = STORE.entrySet().stream()
-                    .map(e -> RoomSummary.newBuilder()
+        public void search(Empty request, StreamObserver<HotelSummaries> responseObserver) {
+            HotelSummaries summaries = STORE.entrySet().stream()
+                    .map(e -> HotelSummary.newBuilder()
                             .setId(e.getKey())
                             .setName(e.getValue())
                             .build())
-                    .collect(collectingAndThen(toList(), s -> RoomSummaries.newBuilder().addAllSummaries(s).build()));
+                    .collect(collectingAndThen(toList(), s -> HotelSummaries.newBuilder().addAllSummaries(s).build()));
 
             responseObserver.onNext(summaries);
             responseObserver.onCompleted();

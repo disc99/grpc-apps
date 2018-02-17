@@ -101,6 +101,14 @@ project(':inventory-service') {
 	}
 }
 
+project(':hotel-service') {
+	apply plugin: 'java'
+
+	dependencies {
+		compile project(':app-scheme')
+	}
+}
+
 //project(':sample-front-service') {
 //	apply plugin: 'com.google.protobuf'
 //	apply plugin: 'org.springframework.boot'

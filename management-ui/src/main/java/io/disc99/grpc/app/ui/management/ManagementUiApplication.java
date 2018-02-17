@@ -64,11 +64,11 @@ public class ManagementUiApplication {
         return "redirect:/room/";
     }
 
-    InventoryGrpc.InventoryBlockingStub stub() {
+    InventoryServiceGrpc.InventoryServiceBlockingStub stub() {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 6565)
                 .usePlaintext(true)
                 .build();
-        return InventoryGrpc.newBlockingStub(channel);
+        return InventoryServiceGrpc.newBlockingStub(channel);
     }
 }
 
