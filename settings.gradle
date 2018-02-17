@@ -1,5 +1,5 @@
 rootProject.name = 'grpc-apps'
 
 include ':app-scheme'
-include ':backend-service'
-include ':front-service'
+include ':sample-backend-service'
+include ':sample-front-service'

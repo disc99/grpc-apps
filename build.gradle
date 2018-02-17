@@ -63,7 +63,7 @@ project(':app-scheme') {
 
 }
 
-project(':front-service') {
+project(':sample-front-service') {
 	apply plugin: 'org.springframework.boot'
 
 	dependencies {
@@ -73,7 +73,7 @@ project(':front-service') {
 	}
 }
 
-project(':backend-service') {
+project(':sample-backend-service') {
 	apply plugin: 'org.springframework.boot'
 
 	dependencies {
