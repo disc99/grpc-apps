@@ -63,6 +63,10 @@ project(':app-scheme') {
 
 }
 
+project(':hotel-ui') {
+
+}
+
 project(':sample-front-service') {
 	apply plugin: 'org.springframework.boot'
 
