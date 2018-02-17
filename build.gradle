@@ -11,29 +11,32 @@ buildscript {
 }
 
 subprojects {
+	apply plugin: 'idea'
+
 	repositories {
 		mavenCentral()
 		jcenter()
 	}
-
-	apply plugin: 'java'
-	apply plugin: 'idea'
-	apply plugin: 'io.spring.dependency-management'
-
-	sourceCompatibility = compatibility
-	targetCompatibility = compatibility
-
-	version = '0.0.1-SNAPSHOT'
-
-	dependencyManagement {
-		imports {
-			mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-		}
-	}
+//
+//	apply plugin: 'java'
+//	apply plugin: 'idea'
+//	apply plugin: 'io.spring.dependency-management'
+//
+//	sourceCompatibility = compatibility
+//	targetCompatibility = compatibility
+//
+//	version = '0.0.1-SNAPSHOT'
+//
+//	dependencyManagement {
+//		imports {
+//			mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+//			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+//		}
+//	}
 }
 
 project(':app-scheme') {
+	apply plugin: 'java'
 	apply plugin: 'com.google.protobuf'
 
 	protobuf {
@@ -59,6 +62,10 @@ project(':app-scheme') {
 				srcDirs 'build/generated/source/proto/main/java'
 			}
 		}
+	}
+
+	dependencies {
+		compile dependency.grpc
 	}
 }
 
@@ -67,76 +74,80 @@ project(':hotel-ui') {
 }
 
 project(':inventory-service') {
-
-}
-
-project(':sample-front-service') {
-	apply plugin: 'com.google.protobuf'
-	apply plugin: 'org.springframework.boot'
-
-	protobuf {
-		protoc {
-			artifact = "com.google.protobuf:protoc:${protocVersion}"
-		}
-		plugins {
-			grpc {
-				artifact = "io.grpc:protoc-gen-grpc-java:${protocGenVersion}"
-			}
-		}
-		generateProtoTasks {
-			all()*.plugins {
-				grpc {}
-			}
-		}
-	}
-
-	sourceSets {
-		main {
-			java {
-				srcDirs 'build/generated/source/proto/main/grpc'
-				srcDirs 'build/generated/source/proto/main/java'
-			}
-		}
-	}
+	apply plugin: 'java'
 
 	dependencies {
-		compile dependency.api
-		compile dependency.grpc
-		testCompile dependency.grpcTest
+		compile project(':app-scheme')
 	}
 }
 
-project(':sample-backend-service') {
-	apply plugin: 'com.google.protobuf'
-	apply plugin: 'org.springframework.boot'
-
-	protobuf {
-		protoc {
-			artifact = "com.google.protobuf:protoc:${protocVersion}"
-		}
-		plugins {
-			grpc {
-				artifact = "io.grpc:protoc-gen-grpc-java:${protocGenVersion}"
-			}
-		}
-		generateProtoTasks {
-			all()*.plugins {
-				grpc {}
-			}
-		}
-	}
-
-	sourceSets {
-		main {
-			java {
-				srcDirs 'build/generated/source/proto/main/grpc'
-				srcDirs 'build/generated/source/proto/main/java'
-			}
-		}
-	}
-
-	dependencies {
-		compile dependency.grpc
-		testCompile dependency.grpcTest
-	}
-}
+//project(':sample-front-service') {
+//	apply plugin: 'com.google.protobuf'
+//	apply plugin: 'org.springframework.boot'
+//
+//	protobuf {
+//		protoc {
+//			artifact = "com.google.protobuf:protoc:${protocVersion}"
+//		}
+//		plugins {
+//			grpc {
+//				artifact = "io.grpc:protoc-gen-grpc-java:${protocGenVersion}"
+//			}
+//		}
+//		generateProtoTasks {
+//			all()*.plugins {
+//				grpc {}
+//			}
+//		}
+//	}
+//
+//	sourceSets {
+//		main {
+//			java {
+//				srcDirs 'build/generated/source/proto/main/grpc'
+//				srcDirs 'build/generated/source/proto/main/java'
+//			}
+//		}
+//	}
+//
+//	dependencies {
+//		compile dependency.api
+//		compile dependency.grpc
+//		testCompile dependency.grpcTest
+//	}
+//}
+//
+//project(':sample-backend-service') {
+//	apply plugin: 'com.google.protobuf'
+//	apply plugin: 'org.springframework.boot'
+//
+//	protobuf {
+//		protoc {
+//			artifact = "com.google.protobuf:protoc:${protocVersion}"
+//		}
+//		plugins {
+//			grpc {
+//				artifact = "io.grpc:protoc-gen-grpc-java:${protocGenVersion}"
+//			}
+//		}
+//		generateProtoTasks {
+//			all()*.plugins {
+//				grpc {}
+//			}
+//		}
+//	}
+//
+//	sourceSets {
+//		main {
+//			java {
+//				srcDirs 'build/generated/source/proto/main/grpc'
+//				srcDirs 'build/generated/source/proto/main/java'
+//			}
+//		}
+//	}
+//
+//	dependencies {
+//		compile dependency.grpc
+//		testCompile dependency.grpcTest
+//	}
+//}
