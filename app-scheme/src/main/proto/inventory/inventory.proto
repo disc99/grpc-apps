@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 option java_multiple_files = true;
 option java_package = "io.disc99.grpc.apps.inventory";
 
@@ -8,6 +10,7 @@ package greeter;
 service Inventory {
     rpc Add (Room) returns (RoomId) {}
     rpc FindBy (RoomId) returns (RoomDetail) {}
+    rpc Search (google.protobuf.Empty) returns (RoomSummaries) {}
 }
 
 message RoomId {
@@ -19,6 +22,15 @@ message Room {
 }
 
 message RoomDetail {
+    int32 id = 1;
+    string name = 2;
+}
+
+message RoomSummaries {
+    repeated RoomSummary summaries = 1;
+}
+
+message RoomSummary {
     int32 id = 1;
     string name = 2;
 }

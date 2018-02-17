@@ -1,9 +1,7 @@
 package io.disc99.grpc.app.service.inventory;
 
-import io.disc99.grpc.apps.inventory.InventoryGrpc;
-import io.disc99.grpc.apps.inventory.Room;
-import io.disc99.grpc.apps.inventory.RoomDetail;
-import io.disc99.grpc.apps.inventory.RoomId;
+import com.google.protobuf.Empty;
+import io.disc99.grpc.apps.inventory.*;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -11,9 +9,15 @@ import io.grpc.stub.StreamObserver;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
+
 public class InventoryServer {
 
     public static void main(String[] args) throws Exception {
+        STORE.put(1, "Hotel 1");
+        STORE.put(2, "Hotel 2");
+
         Server server = ServerBuilder.forPort(6565)
                 .addService(new InventoryImpl())
                 .build();
@@ -49,6 +53,19 @@ public class InventoryServer {
                     .build();
 
             responseObserver.onNext(room);
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void search(Empty request, StreamObserver<RoomSummaries> responseObserver) {
+            RoomSummaries summaries = STORE.entrySet().stream()
+                    .map(e -> RoomSummary.newBuilder()
+                            .setId(e.getKey())
+                            .setName(e.getValue())
+                            .build())
+                    .collect(collectingAndThen(toList(), s -> RoomSummaries.newBuilder().addAllSummaries(s).build()));
+
+            responseObserver.onNext(summaries);
             responseObserver.onCompleted();
         }
     }

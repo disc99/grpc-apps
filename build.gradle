@@ -70,7 +70,14 @@ project(':app-scheme') {
 }
 
 project(':hotel-ui') {
+	apply plugin: 'java'
+	apply plugin: 'org.springframework.boot'
 
+	dependencies {
+		compile project(':app-scheme')
+		compile dependency.ui
+		runtime dependency.devtools
+	}
 }
 
 project(':inventory-service') {

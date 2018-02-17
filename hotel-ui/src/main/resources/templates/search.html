@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Search result</title>
+</head>
+<body>
+    <ul>
+        <li th:each="summary : ${summaries}"><a th:href="@{'/hotel/'+${summary.getId()}}" th:text="${summary.getName()}">
+        </a></li>
+    </ul>
+</body>
+</html>

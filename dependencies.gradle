@@ -11,6 +11,10 @@ ext {
     grpcVersion = '1.8.0'
 
     dependency = [
+            ui: [
+                    "org.springframework.boot:spring-boot-starter-web",
+                    "org.springframework.boot:spring-boot-starter-thymeleaf"
+            ],
             api: [
                     "org.springframework.boot:spring-boot-starter-web",
 //                    "org.springframework.boot:spring-boot-starter-actuator",
