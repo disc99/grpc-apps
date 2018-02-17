@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.disc99.grpc.apps.inventory";
+
+package greeter;
+
+service Inventory {
+    rpc Add (Room) returns (int32) {}
+    rpc FindBy (int32) returns (RoomDetail) {}
+}
+
+message Room {
+    string name = 1;
+}
+
+message RoomDetail {
+    int32 id = 1;
+    string name = 2;
+}
