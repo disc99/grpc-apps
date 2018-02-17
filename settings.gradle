@@ -2,6 +2,7 @@ rootProject.name = 'grpc-apps'
 
 include ':app-scheme'
 include ':hotel-ui'
+include ':inventory-service'
 
 include ':sample-backend-service'
 include ':sample-front-service'

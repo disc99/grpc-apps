@@ -66,6 +66,9 @@ project(':app-scheme') {
 project(':hotel-ui') {
 
 }
+project(':inventory-service') {
+
+}
 
 project(':sample-front-service') {
 	apply plugin: 'org.springframework.boot'
