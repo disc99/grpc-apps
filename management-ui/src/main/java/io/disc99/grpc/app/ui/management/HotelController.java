@@ -17,10 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/hotel")
 class HotelController {
 
+    // TODO
+    int hotelId = 1;
+
     @GetMapping("/edit")
     String edit(Model model) {
         HotelId id = HotelId.newBuilder()
-                .setId(1)
+                .setValue(hotelId)
                 .build();
         HotelDetail detail = stub().findBy(id);
         HotelForm form = new HotelForm();
@@ -35,7 +38,7 @@ class HotelController {
         Hotel hotel = Hotel.newBuilder()
                 .setName(form.getName())
                 .build();
-        stub().add(hotel);
+        stub().create(hotel);
         return "redirect:/index";
     }
 

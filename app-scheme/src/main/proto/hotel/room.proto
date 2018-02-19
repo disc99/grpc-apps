@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+
+option java_multiple_files = true;
+option java_package = "io.disc99.grpc.apps.room";
+
+package room;
+
+service RoomService {
+    rpc Add (Room) returns (RoomId) {}
+    rpc FindBy (RoomId) returns (RoomDetail) {}
+    rpc Search (Criteria) returns (RoomSummaries) {}
+}
+
+message RoomId {
+    int32 value = 1;
+    int32 hotelId = 2;
+}
+
+message Room {
+    string name = 1;
+    int32 hotelId = 2;
+}
+
+message RoomDetail {
+    int32 id = 1;
+    string name = 2;
+}
+
+message Criteria {
+    int32 hotelId = 1;
+}
+
+message RoomSummaries {
+    repeated RoomSummary summaries = 1;
+}
+
+message RoomSummary {
+    int32 id = 1;
+    int32 hotelId = 2;
+    string name = 3;
+}

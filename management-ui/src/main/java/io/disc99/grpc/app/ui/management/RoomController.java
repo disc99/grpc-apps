@@ -1,7 +1,6 @@
 package io.disc99.grpc.app.ui.management;
 
-import com.google.protobuf.Empty;
-import io.disc99.grpc.apps.inventory.*;
+import io.disc99.grpc.apps.room.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.springframework.stereotype.Controller;
@@ -11,11 +10,13 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/room")
 class RoomController {
+    // TODO
+    int hotelId = 1;
 
     @GetMapping("/")
     String list(Model model) {
-        Empty empty = Empty.newBuilder().build();
-        RoomSummaries summaries = stub().search(empty);
+        Criteria criteria = Criteria.newBuilder().setHotelId(hotelId).build();
+        RoomSummaries summaries = stub().search(criteria);
         model.addAttribute("summaries", summaries.getSummariesList());
         return "room/list";
     }
@@ -30,7 +31,8 @@ class RoomController {
     @GetMapping("/{id}")
     String findBy(@PathVariable Integer id, Model model) {
         RoomId roomId = RoomId.newBuilder()
-                .setId(id)
+                .setValue(id)
+                .setHotelId(hotelId)
                 .build();
         RoomDetail detail = stub().findBy(roomId);
         model.addAttribute("detail", detail);
@@ -43,16 +45,32 @@ class RoomController {
     @PostMapping("/")
     String add(@ModelAttribute RoomForm form) {
         Room room = Room.newBuilder()
+                .setHotelId(hotelId)
                 .setName(form.getName())
                 .build();
         stub().add(room);
         return "redirect:/room/";
     }
 
-    InventoryServiceGrpc.InventoryServiceBlockingStub stub() {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 6565)
+    @PostMapping("/{id}")
+    String update(@PathVariable Integer id, Model model) {
+        RoomId roomId = RoomId.newBuilder()
+                .setValue(id)
+                .setHotelId(hotelId)
+                .build();
+        RoomDetail detail = stub().findBy(roomId);
+        model.addAttribute("detail", detail);
+        RoomForm form = new RoomForm();
+        form.setName(detail.getName());
+        model.addAttribute("form", form);
+        return "room/edit";
+    }
+
+
+    RoomServiceGrpc.RoomServiceBlockingStub stub() {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 6566)
                 .usePlaintext(true)
                 .build();
-        return InventoryServiceGrpc.newBlockingStub(channel);
+        return RoomServiceGrpc.newBlockingStub(channel);
     }
 }

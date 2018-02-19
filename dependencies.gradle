@@ -22,6 +22,10 @@ ext {
 //                    "io.springfox:springfox-swagger-ui:${swaggerVersion}",
 //                    "io.springfox:springfox-bean-validators:${swaggerVersion}"
             ],
+            security: [
+                    'org.springframework.boot:spring-boot-starter-security',
+                    'org.thymeleaf.extras:thymeleaf-extras-springsecurity4'
+            ],
             grpc: [
                     "io.grpc:grpc-protobuf:${grpcVersion}",
                     "io.grpc:grpc-stub:${grpcVersion}",
