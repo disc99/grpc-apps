@@ -6,6 +6,3 @@ include ':hotel-ui'
 include ':management-ui'
 include ':inventory-service'
 include ':hotel-service'
-
-//include ':sample-backend-service'
-//include ':sample-front-service'
