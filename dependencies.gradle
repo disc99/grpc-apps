@@ -1,6 +1,7 @@
 ext {
     encoding = 'UTF-8'
     compatibility = 1.8
+//    springBootVersion = '2.0.0.RC2'
     springBootVersion = '1.5.9.RELEASE'
     springCloudVersion = 'Edgware.RELEASE'
     spockVersion = '1.1-groovy-2.4'
