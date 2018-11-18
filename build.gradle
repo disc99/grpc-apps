@@ -59,20 +59,23 @@ subprojects {
 	}
 }
 
+project(':lib') {
+	dependencies {
+		compile dependency.grpc
+	}
+}
+
 project(':front-service') {
 	apply plugin: 'org.springframework.boot'
-
 	dependencies {
+		compile project(':lib')
 		compile dependency.api
-		compile dependency.grpc
 	}
 }
 
 project(':backend-service') {
 	apply plugin: 'org.springframework.boot'
-
 	dependencies {
-		compile dependency.grpc
+		compile project(':lib')
 	}
-
 }

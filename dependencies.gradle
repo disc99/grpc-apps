@@ -18,7 +18,8 @@ ext {
 //                    "io.springfox:springfox-bean-validators:${swaggerVersion}"
             ],
             grpc: [
-                    'org.lognet:grpc-spring-boot-starter:2.1.4'
+                    'org.lognet:grpc-spring-boot-starter:2.1.4',
+                    "org.springframework.boot:spring-boot-starter-aop"
             ],
             devtools: [
                     'org.springframework.boot:spring-boot-devtools'
@@ -26,11 +27,6 @@ ext {
             compileSupport: [
                     'org.projectlombok:lombok',
                     'org.springframework.boot:spring-boot-configuration-processor'
-            ],
-            test: [
-                    "org.springframework.boot:spring-boot-starter-test",
-                    "org.spockframework:spock-core:${spockVersion}",
-                    "org.spockframework:spock-spring:${spockVersion}"
             ]
     ]
 }

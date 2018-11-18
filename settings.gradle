@@ -1,4 +1,5 @@
 rootProject.name = 'grpc-apps'
 
+include ':lib'
 include ':backend-service'
 include ':front-service'
